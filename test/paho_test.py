@@ -110,7 +110,7 @@ def receive_unordered(sock, recv1_packet, recv2_packet, error_string):
             raise ValueError(error_string)
         recvd += r
 
-    if recvd == expected1 or recvd == expected2:
+    if recvd in (expected1, expected2):
         return
     else:
         packet_matches(error_string, recvd, expected2)

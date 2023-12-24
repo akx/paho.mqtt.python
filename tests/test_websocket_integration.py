@@ -57,9 +57,8 @@ class TestInvalidWebsocketResponse:
                 # Respond with data passed in to serve()
                 _self.request.sendall(b"200 OK")
 
-        with fake_websocket_broker.serve(WebsocketHandler):
-            with pytest.raises(WebsocketConnectionError) as exc:
-                mqttc.connect("localhost", 1888, keepalive=10)
+        with fake_websocket_broker.serve(WebsocketHandler), pytest.raises(WebsocketConnectionError) as exc:
+            mqttc.connect("localhost", 1888, keepalive=10)
 
         assert str(exc.value) == "WebSocket handshake error"
 
@@ -100,9 +99,8 @@ class TestBadWebsocketHeaders:
         init_response_headers["Connection"] = "bad"
         response = self._get_basic_handler(init_response_headers)
 
-        with fake_websocket_broker.serve(response):
-            with pytest.raises(WebsocketConnectionError) as exc:
-                mqttc.connect("localhost", 1888, keepalive=10)
+        with fake_websocket_broker.serve(response), pytest.raises(WebsocketConnectionError) as exc:
+            mqttc.connect("localhost", 1888, keepalive=10)
 
         assert str(exc.value) == "WebSocket handshake error, connection not upgraded"
 
@@ -118,9 +116,8 @@ class TestBadWebsocketHeaders:
 
         response = self._get_basic_handler(init_response_headers)
 
-        with fake_websocket_broker.serve(response):
-            with pytest.raises(WebsocketConnectionError) as exc:
-                mqttc.connect("localhost", 1888, keepalive=10)
+        with fake_websocket_broker.serve(response), pytest.raises(WebsocketConnectionError) as exc:
+            mqttc.connect("localhost", 1888, keepalive=10)
 
         assert str(exc.value) == "WebSocket handshake error, invalid secret key"
 

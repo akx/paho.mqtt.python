@@ -81,10 +81,14 @@ extend-select = [
     "F82",
     "I",
     "S", # Bandit
+    "SIM",
     "UP",
     "W",
 ]
-ignore = []
+ignore = [
+    "SIM105", # contextlib.suppress() has a performance cost
+    "SIM108", # ternary operators might not be as easy to read
+]
 line-length = 167
 
 [tool.ruff.per-file-ignores]

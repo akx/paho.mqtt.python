@@ -72,11 +72,10 @@ class SelectMqttExample:
         while not self.disconnected[0]:
             self.do_select()
 
-            if self.state in {0, 2, 4}:
-                if time() - self.t >= 5:
-                    print("Publishing")
-                    self.client.publish(topic, b'Hello' * 40000)
-                    self.state += 1
+            if self.state in {0, 2, 4} and time() - self.t >= 5:
+                print("Publishing")
+                self.client.publish(topic, b'Hello' * 40000)
+                self.state += 1
 
             if self.state == 6:
                 self.state += 1

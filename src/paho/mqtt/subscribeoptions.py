@@ -80,8 +80,8 @@ class SubscribeOptions:
     def unpack(self, buffer):
         b0 = buffer[0]
         self.retainHandling = ((b0 >> 4) & 0x03)
-        self.retainAsPublished = True if ((b0 >> 3) & 0x01) == 1 else False
-        self.noLocal = True if ((b0 >> 2) & 0x01) == 1 else False
+        self.retainAsPublished = ((b0 >> 3) & 0x01) == 1
+        self.noLocal = ((b0 >> 2) & 0x01) == 1
         self.QoS = (b0 & 0x03)
         if self.retainHandling not in (0, 1, 2):
             raise AssertionError(f"Retain handling should be 0, 1 or 2, not {self.retainHandling}")

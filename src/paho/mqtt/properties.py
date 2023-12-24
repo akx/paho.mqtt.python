@@ -244,7 +244,7 @@ class Properties:
     def getIdentFromName(self, compressedName):
         # return the identifier corresponding to the property name
         result = -1
-        for name in self.names.keys():
+        for name in self.names:
             if compressedName == name.replace(' ', ''):
                 result = self.names[name]
                 break
@@ -257,7 +257,7 @@ class Properties:
             object.__setattr__(self, name, value)
         else:
             # the name could have spaces in, or not.  Remove spaces before assignment
-            if name not in [aname.replace(' ', '') for aname in self.names.keys()]:
+            if name not in [aname.replace(' ', '') for aname in self.names]:
                 raise MQTTException(
                     "Property name must be one of "+str(self.names.keys()))
             # check that this attribute applies to the packet type
@@ -297,7 +297,7 @@ class Properties:
     def __str__(self):
         buffer = "["
         first = True
-        for name in self.names.keys():
+        for name in self.names:
             compressedName = name.replace(' ', '')
             if hasattr(self, compressedName):
                 if not first:
@@ -310,7 +310,7 @@ class Properties:
 
     def json(self):
         data = {}
-        for name in self.names.keys():
+        for name in self.names:
             compressedName = name.replace(' ', '')
             if hasattr(self, compressedName):
                 val = getattr(self, compressedName)
@@ -322,7 +322,7 @@ class Properties:
 
     def isEmpty(self):
         rc = True
-        for name in self.names.keys():
+        for name in self.names:
             compressedName = name.replace(' ', '')
             if hasattr(self, compressedName):
                 rc = False
@@ -330,7 +330,7 @@ class Properties:
         return rc
 
     def clear(self):
-        for name in self.names.keys():
+        for name in self.names:
             compressedName = name.replace(' ', '')
             if hasattr(self, compressedName):
                 delattr(self, compressedName)
@@ -357,7 +357,7 @@ class Properties:
     def pack(self):
         # serialize properties into buffer for sending over network
         buffer = b""
-        for name in self.names.keys():
+        for name in self.names:
             compressedName = name.replace(' ', '')
             if hasattr(self, compressedName):
                 identifier = self.getIdentFromName(compressedName)

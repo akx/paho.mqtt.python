@@ -1224,9 +1224,8 @@ class Client:
 
         A ValueError will be raised if qos is not one of 0, 1 or 2, or if
         the length of the payload is greater than 268435455 bytes."""
-        if self._protocol != MQTTv5:
-            if topic is None or len(topic) == 0:
-                raise ValueError('Invalid topic.')
+        if self._protocol != MQTTv5 and not topic:
+            raise ValueError('Invalid topic.')
 
         topic = topic.encode('utf-8')
 
@@ -2765,7 +2764,7 @@ class Client:
 
         connect_flags = 0
         if self._protocol == MQTTv5:
-            if self._clean_start is True:
+            if self._clean_start is True:  # noqa: SIM114
                 connect_flags |= 0x02
             elif self._clean_start == MQTT_CLEAN_START_FIRST_ONLY and self._mqttv5_first_connect:
                 connect_flags |= 0x02
@@ -2873,7 +2872,7 @@ class Client:
         packet = bytearray()
         packet.append(command)
 
-        if self._protocol == MQTTv5:
+        if self._protocol == MQTTv5:  # noqa: SIM102
             if properties is not None or reasoncode is not None:
                 if reasoncode is None:
                     reasoncode = ReasonCodes(DISCONNECT >> 4, identifier=0)
@@ -2884,7 +2883,7 @@ class Client:
 
         self._pack_remaining_length(packet, remaining_length)
 
-        if self._protocol == MQTTv5:
+        if self._protocol == MQTTv5:  # noqa: SIM102
             if reasoncode is not None:
                 packet += reasoncode.pack()
                 if properties is not None:
@@ -3050,7 +3049,7 @@ class Client:
 
         # If we have an external event loop registered, use that instead
         # of calling loop_write() directly.
-        if self._thread is None and self._on_socket_register_write is None:
+        if self._thread is None and self._on_socket_register_write is None:  # noqa: SIM102
             if self._in_callback_mutex.acquire(False):
                 self._in_callback_mutex.release()
                 return self.loop_write()
@@ -3471,7 +3470,7 @@ class Client:
             return MQTT_ERR_PROTOCOL
 
         mid, = struct.unpack("!H", self._in_packet['packet'][:2])
-        if self._protocol == MQTTv5:
+        if self._protocol == MQTTv5:  # noqa: SIM102
             if self._in_packet['remaining_length'] > 2:
                 reasonCode = ReasonCodes(PUBREC >> 4)
                 reasonCode.unpack(self._in_packet['packet'][2:])
@@ -3580,7 +3579,7 @@ class Client:
         packet_type = PUBACK if cmd == "PUBACK" else PUBCOMP
         packet_type = packet_type >> 4
         mid, = struct.unpack("!H", self._in_packet['packet'][:2])
-        if self._protocol == MQTTv5:
+        if self._protocol == MQTTv5:  # noqa: SIM102
             if self._in_packet['remaining_length'] > 2:
                 reasonCode = ReasonCodes(packet_type)
                 reasonCode.unpack(self._in_packet['packet'][2:])
